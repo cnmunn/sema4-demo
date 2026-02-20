@@ -1,11 +1,34 @@
 # sema4-demo
 
-Demo for Sema4.ai showing how Braintrust closes the loop on agent iteration.
-Three acts:
+A demo showing how Braintrust closes the loop on agent iteration — from raw benchmark traces through live evals running in your own infrastructure. Three acts:
 
 1. **Tau bench trace ingestion** → Braintrust experiments (model comparison)
-2. **"2026-style" SQL gen agent** — Claude + bash/file tools, fully traced
+2. **"2026-style" SQL gen agent** — GPT-4o + bash/file tools, fully traced
 3. **Remote eval**: Braintrust Playground → Modal → results back to Braintrust
+
+---
+
+## Setting up your Braintrust project
+
+> **This repo is designed to run against your own Braintrust project.** Follow these steps before running anything.
+
+### 1. Create a Braintrust account and project
+
+1. Sign up at [braintrust.dev](https://www.braintrust.dev) if you haven't already
+2. Click **New Project** and name it whatever you like (e.g. `my-agent-demo`)
+3. Go to **Settings → API Keys** and create a new API key — save it for the next step
+
+### 2. Update the project name in code
+
+The project name `sema4-demo` is hardcoded in three places. Replace it with your project name:
+
+| File | Line | What to change |
+|---|---|---|
+| `agent/agent.py` | ~192 | `braintrust.init_logger(project="sema4-demo")` |
+| `evals/sql_gen.eval.py` | ~127 | First arg to `Eval("sema4-demo", ...)` |
+| `evals/sql_gen.eval.py` | ~138 | `project="sema4-demo"` in the dataset pull |
+
+Also update the Modal secret name in `modal_app.py` if you rename it (search for `sema4-demo-secrets`).
 
 ---
 
